@@ -1,0 +1,101 @@
+:root { font-family: system-ui, sans-serif; color: #2d2925; background: #f3f0e8; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { min-height: 100vh; margin: 0; padding: 16px; background: #f3f0e8; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #00727e; outline-offset: 2px; }
+.demo { width: min(980px, 100%); min-height: 540px; margin: 0 auto; overflow: hidden; border: 1px solid #ddd6cc; border-radius: 14px; background: #fffefa; box-shadow: 0 16px 42px rgb(45 41 37 / 10%); }
+.demo-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 19px 24px; border-bottom: 1px solid #e9e3da; }
+.demo-title { margin: 0; font: 700 1.1rem/1.2 system-ui, sans-serif; }
+.demo-kicker { margin: 0 0 4px; color: #807160; font: 500 .64rem ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+.demo-content { padding: 24px; }
+.demo-notice { display: inline-flex; align-items: center; gap: 7px; border-radius: 99px; background: #f3e5eb; color: #702244; padding: 6px 10px; font-size: .68rem; }
+.demo-notice::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #ee3488; }
+.demo-muted { color: #655e57; font-size: .82rem; }
+.demo-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; border: 0; border-radius: 5px; padding: 8px 13px; background: #9f124f; color: white; font-weight: 700; font-size: .78rem; }
+.demo-btn.secondary { border: 1px solid #d9d1c8; background: #fffefa; color: #2d2925; }
+.demo-btn:hover { filter: brightness(1.04); }
+.demo-field { display: grid; gap: 5px; color: #504941; font-size: .73rem; font-weight: 600; }
+.demo-field input, .demo-field select { min-width: 0; min-height: 38px; border: 1px solid #d9d1c8; border-radius: 4px; background: white; padding: 8px 10px; color: #2d2925; }
+.demo-status { min-height: 1.4em; margin: 10px 0 0; color: #087456; font-size: .76rem; }
+/* Recipe preview */
+.recipe-app { display: grid; grid-template-columns: 230px minmax(0, 1fr); min-height: 490px; }
+.recipe-sidebar { padding: 20px 16px; background: #fff3d9; border-right: 1px solid #f1d7a4; }
+.recipe-brand { display: flex; align-items: center; gap: 9px; margin: 0 0 17px; color: #6b2c04; font: 700 1.05rem Georgia, serif; }
+.recipe-brand img { width: 33px; height: 33px; object-fit: contain; }
+.recipe-search { width: 100%; min-height: 36px; margin-bottom: 14px; border: 1px solid #e3bb73; border-radius: 5px; padding: 7px 9px; }
+.recipe-list { display: grid; gap: 6px; }
+.recipe-item { border: 0; border-radius: 5px; padding: 10px; background: transparent; color: #58310f; text-align: left; }
+.recipe-item[aria-current="true"], .recipe-item:hover { background: #ffe0a2; }
+.recipe-detail { padding: 23px; }
+.recipe-detail h2 { margin: 0 0 4px; color: #6b2c04; font: 700 1.8rem Georgia, serif; }
+.recipe-columns { display: grid; grid-template-columns: .8fr 1.2fr; gap: 22px; margin: 24px 0; }
+.recipe-columns h3 { color: #a45115; font: 700 .75rem ui-monospace, monospace; text-transform: uppercase; letter-spacing: .08em; }
+.recipe-columns ul, .recipe-columns ol { display: grid; gap: 8px; padding-left: 19px; color: #504941; font-size: .78rem; }
+.recipe-photo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+.recipe-photo img { width: 100%; height: 105px; border-radius: 6px; object-fit: cover; }
+.recipe-add { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee4d6; }
+/* Hanoi preview */
+.hanoi { padding: 20px; color: white; background: #8b3a19; }
+.hanoi .demo-title { color: white; font-family: Georgia, serif; font-size: 1.6rem; text-align: center; }
+.hanoi-controls { display: flex; flex-wrap: wrap; align-items: end; justify-content: center; gap: 10px; margin: 18px 0 8px; }
+.hanoi-controls .demo-field { color: white; }
+.hanoi-controls input { width: 62px; text-align: center; }
+.hanoi .demo-btn { background: #8d4300; color: white; }
+.hanoi-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 245px; padding: 24px 15px 18px; border-radius: 12px; background: #0f7a1d; }
+.hanoi-rod { position: relative; display: flex; flex-direction: column-reverse; align-items: center; justify-content: flex-start; gap: 5px; min-width: 0; padding: 0 0 26px; border: 0; border-radius: 7px; background: transparent; }
+.hanoi-rod::before { content: ''; position: absolute; bottom: 20px; left: 50%; width: 9px; height: calc(100% - 30px); transform: translateX(-50%); border-radius: 8px; background: #d35400; }
+.hanoi-rod::after { content: attr(data-label); position: absolute; bottom: 0; left: 50%; display: grid; width: 26px; height: 26px; transform: translateX(-50%); place-items: center; border-radius: 50%; background: #6b2c04; color: white; font-weight: 700; }
+.hanoi-rod.selected { outline: 2px solid #8beefc; outline-offset: 4px; }
+.hanoi-disk { z-index: 1; height: 17px; max-width: 90%; border: 1px solid rgb(0 0 0 / 22%); border-radius: 99px; }
+.hanoi-foot { display: flex; align-items: center; justify-content: space-between; color: white; font-size: .75rem; }
+/* Train preview */
+.train-app { padding: 22px; background: #2b18ff; }
+.train-panel { min-height: 450px; padding: 20px; border-radius: 16px; background: #afc6ff; color: #17124f; }
+.train-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.train-head .demo-title { font: 700 1.6rem Impact, system-ui, sans-serif; text-transform: uppercase; color: #2b18ff; }
+.train-select { border: 0; border-radius: 6px; padding: 8px 12px; color: white; background: #2b18ff; }
+.train-legend { display: flex; gap: 14px; font-size: .7rem; }
+.train-legend span::before { content: ''; display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 2px; background: #00c853; }
+.train-legend span:last-child::before { background: #ff3d3d; }
+.station-row { display: flex; align-items: stretch; gap: 12px; overflow-x: auto; padding: 25px 2px 19px; }
+.station-card { flex: 1 0 125px; display: grid; justify-items: center; align-content: center; gap: 10px; min-height: 180px; padding: 13px 8px; border: 2px solid transparent; border-radius: 14px; background: rgb(255 255 255 / 38%); color: #2b18ff; cursor: pointer; }
+.station-card:hover, .station-card.selected { border-color: #2b18ff; background: rgb(255 255 255 / 70%); }
+.train-icon { position: relative; display: block; width: 60px; height: 60px; border-radius: 12px; background: #00c853; }
+.train-icon::before { content: ''; position: absolute; left: 12px; right: 12px; top: 13px; height: 18px; border-radius: 4px; background: white; }
+.train-icon::after { content: '●   ●'; position: absolute; left: 12px; bottom: 2px; color: white; font-size: 17px; letter-spacing: 3px; }
+.station-card.unavailable .train-icon { background: #ff3d3d; }
+.station-name { font-weight: 800; font-size: .72rem; text-align: center; }
+.train-actions { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
+.train-actions .demo-btn { background: #2b18ff; color: white; }
+/* Dental preview */
+.dental-head { background: #e7fbfd; }
+.dental-brand { color: #075c69; font-weight: 800; }
+.dental-booking { display: grid; grid-template-columns: 1fr .85fr; gap: 28px; }
+.dental-booking h2 { color: #073f50; font-size: 1.75rem; }
+.dental-form { display: grid; gap: 12px; }
+.dental-form .demo-btn { color: white; background: #087f88; }
+.dentist-card { align-self: stretch; border-radius: 9px; padding: 20px; background: linear-gradient(145deg, #dff8fa, #c8f3ed); }
+.dentist-card h3 { margin: 14px 0 3px; color: #075c69; }
+.dentist-avatar { display: grid; width: 74px; height: 74px; place-items: center; border-radius: 50%; background: #8beefc; color: #075c69; font-size: 1.8rem; font-weight: 800; }
+.appointment-list { display: grid; gap: 7px; margin-top: 18px; }
+.appointment-row { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid rgb(7 92 105 / 15%); padding: 8px 0; color: #315962; font-size: .75rem; }
+@media (max-width: 600px) {
+  body { padding: 7px; }
+  .demo-top { padding: 14px; }
+  .demo-content { padding: 14px; }
+  .recipe-app { grid-template-columns: 1fr; }
+  .recipe-sidebar { border-right: 0; border-bottom: 1px solid #f1d7a4; }
+  .recipe-list { grid-template-columns: repeat(3, 1fr); }
+  .recipe-item { padding: 7px 5px; font-size: .7rem; }
+  .recipe-detail { padding: 15px 5px; }
+  .recipe-columns { gap: 12px; }
+  .recipe-add { grid-template-columns: 1fr 1fr; }
+  .recipe-add button { grid-column: 1 / -1; }
+  .hanoi { padding: 14px; }
+  .hanoi-board { min-height: 210px; gap: 4px; padding-right: 4px; padding-left: 4px; }
+  .train-app { padding: 9px; }
+  .train-panel { padding: 13px; }
+  .train-head { align-items: start; flex-direction: column; }
+  .dental-booking { grid-template-columns: 1fr; }
+}

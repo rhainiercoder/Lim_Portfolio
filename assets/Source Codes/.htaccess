@@ -1,0 +1,14 @@
+Options -Indexes
+
+<FilesMatch "(?i)^\.env(?:\..*)?$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule (^|/)(\.git|node_modules|\.pnpm-store)(/|$) - [F,L,NC]
+    RewriteRule (^|/)\.env(?:\.[^/]+)?$ - [F,L,NC]
+    RewriteRule \.(db|sqlite|jar|pdf|docx|txt)$ - [F,L,NC]
+    RewriteRule (^|/)README(?:\.[^/]+)?$ - [F,L,NC]
+    RewriteRule \.session\.sql$ - [F,L,NC]
+</IfModule>
