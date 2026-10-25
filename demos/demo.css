@@ -68,6 +68,22 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .station-name { font-weight: 800; font-size: .72rem; text-align: center; }
 .train-actions { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
 .train-actions .demo-btn { background: #2b18ff; color: white; }
+.demo:has(.train-app) { width: min(1100px, 100%); }
+.train-head { justify-content: center; position: relative; min-height: 82px; }
+.train-head .demo-kicker { display: none; }
+.train-head .demo-title { font: 900 clamp(1.7rem,4vw,3.1rem)/1 Impact, "Arial Narrow", system-ui, sans-serif; }
+.train-legend { position: absolute; right: 10px; top: 0; flex-direction: column; }
+.train-select { display: block; margin: 0 auto; min-width: 200px; text-align: center; font-weight: 800; }
+.station-carousel { display: grid; grid-template-columns: 52px minmax(0,1fr) 52px; align-items: center; gap: 12px; }
+.station-row { min-width: 0; overflow: hidden; }
+.station-card { flex-basis: 0; min-width: 0; }
+.station-arrow { width: 50px; height: 50px; border: 0; border-radius: 50%; background: #2b18ff; color: #fff; font-size: 2rem; font-weight: 800; }
+.train-actions { justify-content: center; margin-top: 2px; }
+.train-actions .demo-field { display: flex; flex-direction: row; align-items: center; gap: 10px; color: #2b18ff; text-transform: uppercase; }
+.train-actions input { max-width: 90px; border-color: #2b18ff; }
+.demo:has(.hanoi) { width: min(1100px,100%); }
+.hanoi .demo-title { font: 900 clamp(1.7rem,4vw,3rem)/1 Impact,"Arial Narrow",system-ui,sans-serif; text-transform: uppercase; }
+.hanoi .demo-kicker { display: none; }
 /* Dental preview */
 .dental-head { background: #e7fbfd; }
 .dental-brand { color: #075c69; font-weight: 800; }

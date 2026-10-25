@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tower of Hanoi demo</title><link rel="stylesheet" href="demo.css"></head>
-<body><main class="demo hanoi"><header><p class="demo-kicker" style="color:#ffe0bb;text-align:center">Interactive prototype</p><h1 class="demo-title">Tower of Hanoi</h1></header><section class="demo-content">
-<div class="hanoi-controls"><label class="demo-field">Disks<input id="disk-count" type="number" value="5" min="3" max="8"></label><button type="button" class="demo-btn" id="reset">Reset</button><button type="button" class="demo-btn" id="hint">Show hint</button><button type="button" class="demo-btn" id="solve">Auto solve</button></div>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tower of Hanoi demo</title><link rel="stylesheet" href="demo.css?v=20261025b"></head>
+<body><main class="demo hanoi"><header><p class="demo-kicker" style="color:#ffe0bb;text-align:center">Interactive prototype</p><h1 class="demo-title">Virtual Tower of Hanoi</h1></header><section class="demo-content">
+<div class="hanoi-controls"><label class="demo-field">No. of disks<input id="disk-count" type="number" value="8" min="3" max="8"></label><button type="button" class="demo-btn" id="hint">Show hint</button><button type="button" class="demo-btn" id="solve">Auto solve</button><button type="button" class="demo-btn" id="reset">Reset</button></div>
 <p class="demo-status" id="message" role="status">Choose a rod with a disk, then choose where to move it.</p><div class="hanoi-board" id="board" aria-label="Puzzle rods"></div><div class="hanoi-foot"><span>Moves: <strong id="moves">0</strong></span><span>Minimum: <strong id="minimum">31</strong></span><span id="progress">Select a rod</span></div></section></main>
 <script>
 const board=document.getElementById("board"),colors=["#ff2828","#ff9f1c","#ffe128","#42df59","#00a665","#185dff","#8218e8","#ed26dc"];
