@@ -70,24 +70,6 @@ $artworkGroups = [
     "creative" => scanArtwork("Multimedia Photoshop Works", "Multimedia Design"),
 ];
 
-$status = "";
-$errors = [];
-$old = ["name" => "", "email" => "", "message" => ""];
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $old["name"] = trim($_POST["name"] ?? "");
-    $old["email"] = trim($_POST["email"] ?? "");
-    $old["message"] = trim($_POST["message"] ?? "");
-    if ($old["name"] === "") $errors[] = "Enter your name.";
-    if (!filter_var($old["email"], FILTER_VALIDATE_EMAIL)) $errors[] = "Enter a valid email address.";
-    if (strlen($old["message"]) < 10) $errors[] = "Write a message of at least 10 characters.";
-    if (!$errors) {
-        $line = date("Y-m-d H:i") . " | " . str_replace(["\r", "\n", "|"], " ", $old["name"]) . " | " . $old["email"] . " | " . str_replace(["\r", "\n"], " ", $old["message"]) . "\n";
-        if (file_put_contents(__DIR__ . "/messages.txt", $line, FILE_APPEND | LOCK_EX) !== false) {
-            $status = "Thanks, your message was sent.";
-            $old = ["name" => "", "email" => "", "message" => ""];
-        } else $errors[] = "Could not save your message. Check that the folder is writable.";
-    }
-}
 function e($value) { return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8"); }
 ?>
 <!DOCTYPE html>
@@ -97,7 +79,7 @@ function e($value) { return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8"
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f4ef">
   <title><?= e($name) ?> | Portfolio</title>
-  <link rel="stylesheet" href="portfolio.css?v=20261025a20">
+  <link rel="stylesheet" href="portfolio.css?v=20261026a08">
 </head>
 <body>
 <div class="site-shell">
@@ -118,7 +100,7 @@ function e($value) { return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8"
       <div class="hero-copy"><p class="eyebrow hero-label" data-typewriter>Digital artist · Visual designer</p><h1><span class="hero-name-word hero-name-first">Rhainier</span> <span class="hero-name-word hero-name-last">Lim</span></h1><p class="hero-intro">I create expressive visuals, characters, and digital experiences, with programming as a tool to bring ideas to life.</p><a class="button button-primary" href="#digital">Explore the work <span aria-hidden="true">↓</span></a></div>
       <figure class="portrait-frame">
         <button class="portrait-toggle" type="button" data-portrait-toggle aria-pressed="false" aria-label="Show illustrated portrait">
-          <span class="portrait-photo"><img src="assets/images/limrhainier.png" alt="Portrait cutout of <?= e($name) ?>" width="910" height="1134" fetchpriority="high"></span>
+          <span class="portrait-photo"><img src="assets/images/limrhainier-neutral.png" alt="Portrait cutout of <?= e($name) ?>" width="910" height="1134" fetchpriority="high"></span>
           <span class="portrait-artwork" aria-hidden="true"><img src="assets/images/limrhainierart.png" alt="" width="1530" height="2019" loading="lazy"></span>
         </button>
       </figure>
@@ -164,15 +146,18 @@ function e($value) { return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8"
       <a class="contact-link" href="https://www.instagram.com/ryuu_064/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="icon-fill" cx="17.5" cy="6.5" r="1"/></svg><span><strong>Instagram</strong><small>@ryuu_064</small></span><span class="contact-arrow" aria-hidden="true">↗</span></a>
       <a class="contact-link" href="https://www.facebook.com/rhainier.lim" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="icon-fill" d="M13.4 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.4v2H7.2V13H10v8z"/></svg><span><strong>Facebook</strong><small>Rhainier Lim</small></span><span class="contact-arrow" aria-hidden="true">↗</span></a>
     </div></div><div class="contact-form-wrap">
-      <?php if ($status): ?><p class="form-status" role="status"><?= e($status) ?></p><?php endif; ?>
-      <?php if ($errors): ?><div class="form-errors" role="alert"><ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
-      <form method="post" action="#contact"><label for="contact-name">Name</label><input id="contact-name" name="name" type="text" value="<?= e($old["name"]) ?>" autocomplete="name" required><label for="contact-email">Email</label><input id="contact-email" name="email" type="email" value="<?= e($old["email"]) ?>" autocomplete="email" required><label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="4" required><?= e($old["message"]) ?></textarea><button class="button button-primary" type="submit">Send a message <span aria-hidden="true">↗</span></button></form>
+      <form data-gmail-compose data-recipient="<?= e($email) ?>" action="mailto:<?= e($email) ?>" method="post" enctype="text/plain">
+        <label for="contact-name">Name</label><input id="contact-name" name="name" type="text" autocomplete="name" required>
+        <label for="contact-email">Email</label><input id="contact-email" name="email" type="email" autocomplete="email" required>
+        <label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="4" minlength="10" required></textarea>
+        <button class="button button-primary" type="submit">Continue in Gmail <span aria-hidden="true">↗</span></button>
+      </form>
     </div></section>
   </main>
   <footer><span>© <?= date("Y") ?> <?= e($name) ?></span><span>Made with PHP, HTML, CSS & JavaScript</span></footer>
 </div>
 <dialog class="lightbox" id="lightbox"><form method="dialog"><button class="lightbox-close" aria-label="Close image">×</button></form><img alt=""><p></p></dialog>
 <a class="back-to-top" href="#home" aria-label="Back to top"><span aria-hidden="true">↑</span><span>Back to top</span></a>
-<script src="portfolio.js?v=20261025a18" defer></script>
+<script src="portfolio.js?v=20261026a19" defer></script>
 </body>
 </html>

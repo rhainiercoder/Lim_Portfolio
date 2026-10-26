@@ -67,10 +67,10 @@ nav a:hover { color: var(--flamingo-ink); }
 @media (min-width: 851px) { .hero { grid-template-columns: minmax(0, 1fr) minmax(360px, .85fr); } }
 .portrait-frame::before { content: ''; position: absolute; inset: 18px -18px -18px 18px; border: 1px solid var(--flamingo); }
 .portrait-toggle { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: pointer; text-align: left; isolation: isolate; }
-.portrait-toggle::before { content: ''; position: absolute; z-index: -1; inset: 14% 7% 3%; border-radius: 48% 52% 55% 45% / 42% 43% 57% 58%; background: radial-gradient(ellipse, rgb(238 52 136 / 14%), rgb(139 238 252 / 15%) 54%, transparent 72%); filter: blur(2px); }
+.portrait-toggle::before { content: none; }
 .portrait-photo, .portrait-photo img, .portrait-artwork, .portrait-artwork img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .portrait-photo, .portrait-artwork { transition: opacity .55s cubic-bezier(.22,.75,.25,1), transform .7s cubic-bezier(.22,.75,.25,1); }
-.portrait-photo img { object-fit: contain; object-position: center bottom; display: block; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgb(0 0 0 / .78) 70%, rgb(0 0 0 / .36) 84%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgb(0 0 0 / .78) 70%, rgb(0 0 0 / .36) 84%, transparent 100%); filter: drop-shadow(0 20px 28px rgb(111 24 70 / 25%)); }
+.portrait-photo img { object-fit: contain; object-position: center bottom; display: block; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgb(0 0 0 / .78) 70%, rgb(0 0 0 / .36) 84%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgb(0 0 0 / .78) 70%, rgb(0 0 0 / .36) 84%, transparent 100%); filter: none; }
 .portrait-artwork { overflow: hidden; opacity: 0; visibility: hidden; transform: scale(1.04); transition: opacity .55s cubic-bezier(.22,.75,.25,1), transform .7s cubic-bezier(.22,.75,.25,1), visibility 0s linear .55s; }
 .portrait-artwork img { display: block; object-fit: contain; object-position: center bottom; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgb(0 0 0 / .78) 70%, rgb(0 0 0 / .36) 84%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgb(0 0 0 / .78) 70%, rgb(0 0 0 / .36) 84%, transparent 100%); }
 .portrait-toggle[aria-pressed="true"] .portrait-photo { opacity: 0; transform: scale(.96); }
@@ -508,4 +508,23 @@ html, body { overflow-x: clip; }
 @media (max-width: 760px) {
   .character-section { margin-inline: -3vw; padding-inline: 6vw; }
   .character-carousel { margin-inline: -3vw; }
+}
+
+/* Keep artwork lighting local to the selected image instead of washing the section. */
+#digital.artwork-section:has(.gallery-carousel),
+#creative.artwork-section:has(.gallery-carousel) {
+  background: none;
+}
+.gallery-slide.is-active::before { content: none; }
+.gallery-slide.is-active .screenshot-button { filter: none; }
+.gallery-slide.is-active .screenshot-button img {
+  filter: drop-shadow(0 0 8px rgb(139 238 252 / 24%)) drop-shadow(0 0 14px rgb(238 52 136 / 10%)) drop-shadow(0 16px 20px rgb(22 18 31 / 22%));
+}
+.character-figure.is-active .character-button::before {
+  width: 88%;
+  background: radial-gradient(ellipse, rgb(139 238 252 / 34%), rgb(238 52 136 / 14%) 54%, transparent 78%);
+  filter: blur(13px);
+}
+@media (max-width: 700px) {
+  .character-figure.is-active .character-button::before { width: 88%; filter: blur(11px); }
 }

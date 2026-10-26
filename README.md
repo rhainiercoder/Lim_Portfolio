@@ -18,7 +18,7 @@ The site combines a PHP-rendered portfolio page with responsive CSS and vanilla 
 - Lightbox previews for artwork and project screenshots
 - Light and dark theme toggle with saved browser preference
 - Responsive layout for desktop, tablet, and mobile screens
-- Contact form with server-side validation
+- Contact form that opens a prefilled Gmail compose window
 
 ## Featured software projects
 
@@ -72,13 +72,7 @@ The portfolio itself is loaded from [`index.php`](index.php), [`portfolio.css`](
 
 ## Contact form
 
-The contact form in `index.php`:
-
-1. Validates the name, email address, and message on the server.
-2. Appends valid submissions to [`messages.txt`](messages.txt).
-3. Requires the project directory to be writable by the PHP process.
-
-This is intended for local or demonstration use. Before deploying publicly, move submissions to a protected data store, avoid exposing the message file through the web server, and add suitable spam protection and access controls.
+The contact form validates the sender's name, reply email, and message in the browser, then opens a Gmail compose page addressed to the portfolio owner's Gmail. The visitor reviews the prefilled message and presses **Send** in Gmail. The portfolio does not send messages automatically or store form submissions on the server.
 
 ## Project structure
 
@@ -88,7 +82,7 @@ This is intended for local or demonstration use. Before deploying publicly, move
 ├── portfolio.css             # Site styling, responsive layout, and themes
 ├── portfolio.js              # Gallery, carousel, demo, lightbox, and theme behavior
 ├── package.json              # Front-end package metadata
-├── messages.txt              # File-backed contact submissions
+├── messages.txt              # Legacy local contact log; current form does not write here
 ├── assets/
 │   ├── images/               # Portraits, artwork, and project images
 │   └── Source Codes/         # Source files for featured projects
