@@ -4,6 +4,59 @@ $title = "BSIT Student";
 $tagline = "I build practical software and thoughtful digital experiences.";
 $about = "I'm Rhainier Lim, and my main focus is digital design and art. I’m self-taught in design and artistic practice, where I’ve developed my eye for composition, color, and visual storytelling. My programming knowledge comes from what I’ve learned in school, and I use that foundation to bring my design ideas to life.";
 $email = "rhainierlim07@gmail.com";
+$contactStatus = "";
+$contactStatusType = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["contact_form"])) {
+    $senderName = preg_replace('/[\r\n]+/', ' ', trim((string)($_POST["name"] ?? "")));
+    $senderEmail = trim((string)($_POST["email"] ?? ""));
+    $message = trim((string)($_POST["message"] ?? ""));
+    $honeypot = trim((string)($_POST["website"] ?? ""));
+
+    if ($honeypot !== "") {
+        $contactStatus = "Thanks! Your message has been sent.";
+        $contactStatusType = "success";
+    } elseif ($senderName === "" || !filter_var($senderEmail, FILTER_VALIDATE_EMAIL) || strlen($message) < 10) {
+        $contactStatus = "Please enter your name, a valid email, and a message of at least 10 characters.";
+        $contactStatusType = "error";
+    } elseif (!is_file(__DIR__ . "/vendor/autoload.php")) {
+        $contactStatus = "The email service is not configured yet. Please email " . $email . " directly.";
+        $contactStatusType = "error";
+    } else {
+        $smtpUser = getenv("MAIL_USERNAME") ?: "";
+        $smtpPassword = getenv("MAIL_PASSWORD") ?: "";
+        $recipient = getenv("MAIL_TO") ?: $email;
+        if ($smtpUser === "" || $smtpPassword === "") {
+            $contactStatus = "The email service is not configured yet. Please email " . $email . " directly.";
+            $contactStatusType = "error";
+        } else {
+            try {
+                require_once __DIR__ . "/vendor/autoload.php";
+                $mailer = new PHPMailer\PHPMailer\PHPMailer(true);
+                $mailer->isSMTP();
+                $mailer->Host = "smtp.gmail.com";
+                $mailer->SMTPAuth = true;
+                $mailer->Username = $smtpUser;
+                $mailer->Password = $smtpPassword;
+                $mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                $mailer->Port = 587;
+                $mailer->CharSet = "UTF-8";
+                $mailer->setFrom($smtpUser, $name . " Portfolio");
+                $mailer->addAddress($recipient);
+                $mailer->addReplyTo($senderEmail, $senderName);
+                $mailer->Subject = "Portfolio inquiry from " . $senderName;
+                $mailer->Body = "Name: " . $senderName . "\nReply email: " . $senderEmail . "\n\n" . $message;
+                $mailer->send();
+                $contactStatus = "Thanks! Your message has been sent.";
+                $contactStatusType = "success";
+            } catch (Throwable $exception) {
+                error_log("Portfolio contact email failed: " . $exception->getMessage());
+                $contactStatus = "Sorry, your message could not be sent right now. Please email " . $email . " directly.";
+                $contactStatusType = "error";
+            }
+        }
+    }
+}
 $skills = ["PHP", "HTML", "CSS", "JavaScript", "Java", "MySQL", "SQLite", "Git"];
 
 $systems = [
@@ -146,11 +199,14 @@ function e($value) { return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8"
       <a class="contact-link" href="https://www.instagram.com/ryuu_064/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="icon-fill" cx="17.5" cy="6.5" r="1"/></svg><span><strong>Instagram</strong><small>@ryuu_064</small></span><span class="contact-arrow" aria-hidden="true">↗</span></a>
       <a class="contact-link" href="https://www.facebook.com/rhainier.lim" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="icon-fill" d="M13.4 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.4v2H7.2V13H10v8z"/></svg><span><strong>Facebook</strong><small>Rhainier Lim</small></span><span class="contact-arrow" aria-hidden="true">↗</span></a>
     </div></div><div class="contact-form-wrap">
-      <form data-gmail-compose data-recipient="<?= e($email) ?>" action="mailto:<?= e($email) ?>" method="post" enctype="text/plain">
+      <form method="post" action="#contact">
+        <input type="hidden" name="contact_form" value="1">
+        <div class="contact-honeypot" aria-hidden="true"><label for="contact-website">Leave this field empty</label><input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <?php if ($contactStatus !== ""): ?><p class="form-status" role="status" data-status="<?= e($contactStatusType) ?>"><?= e($contactStatus) ?></p><?php endif; ?>
         <label for="contact-name">Name</label><input id="contact-name" name="name" type="text" autocomplete="name" required>
         <label for="contact-email">Email</label><input id="contact-email" name="email" type="email" autocomplete="email" required>
         <label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="4" minlength="10" required></textarea>
-        <button class="button button-primary" type="submit">Continue in Gmail <span aria-hidden="true">↗</span></button>
+        <button class="button button-primary" type="submit">Send message <span aria-hidden="true">↗</span></button>
       </form>
     </div></section>
   </main>

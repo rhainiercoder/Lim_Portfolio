@@ -18,7 +18,7 @@ The site combines a PHP-rendered portfolio page with responsive CSS and vanilla 
 - Lightbox previews for artwork and project screenshots
 - Light and dark theme toggle with saved browser preference
 - Responsive layout for desktop, tablet, and mobile screens
-- Contact form that opens a prefilled Gmail compose window
+- Contact form that sends messages through Gmail SMTP
 
 ## Featured software projects
 
@@ -72,7 +72,7 @@ The portfolio itself is loaded from [`index.php`](index.php), [`portfolio.css`](
 
 ## Contact form
 
-The contact form validates the sender's name, reply email, and message in the browser, then opens a Gmail compose page addressed to the portfolio owner's Gmail. The visitor reviews the prefilled message and presses **Send** in Gmail. The portfolio does not send messages automatically or store form submissions on the server.
+The contact form sends messages through Gmail SMTP using PHPMailer. Configure these Render environment variables on the web service: `MAIL_USERNAME` (the sending Gmail address), `MAIL_PASSWORD` (a Google App Password), and optionally `MAIL_TO` (the inbox that receives messages; defaults to the portfolio email). Use a Google App Password with 2-Step Verification enabled; do not use the regular Gmail password. The sender's email is set as Reply-To. Credentials are kept in Render and must not be committed to the repository.
 
 ## Project structure
 

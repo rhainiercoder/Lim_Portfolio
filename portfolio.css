@@ -157,6 +157,8 @@ body.dark .code-content .tok-number { color: #b7b8ff; }
 .contact-form-wrap textarea { resize: vertical; }
 .contact-form-wrap .button { justify-self: start; margin-top: 8px; }
 .form-status, .form-errors { padding: 10px 13px; color: var(--ink); border-left: 3px solid var(--flamingo); background: var(--card); }
+.form-status[data-status="error"] { border-left-color: #b42318; }
+.contact-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .form-errors ul { margin: 0; padding-left: 18px; }
 footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 76px; color: var(--muted); font-size: .73rem; }
 footer a { color: var(--ink); text-decoration: none; }

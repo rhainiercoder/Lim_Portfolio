@@ -192,23 +192,6 @@
   setTheme(savedTheme === "dark");
   if (themeButton) themeButton.addEventListener("click", function () { setTheme(!root.classList.contains("dark")); });
 
-  const contactForm = document.querySelector("[data-gmail-compose]");
-  if (contactForm) {
-    contactForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      if (!contactForm.reportValidity()) return;
-      const formData = new FormData(contactForm);
-      const senderName = String(formData.get("name") || "").trim();
-      const senderEmail = String(formData.get("email") || "").trim();
-      const message = String(formData.get("message") || "").trim();
-      const subject = "Portfolio inquiry from " + senderName;
-      const body = "Name: " + senderName + "\nReply email: " + senderEmail + "\n\n" + message;
-      const gmailUrl = new URL("https://mail.google.com/mail/");
-      gmailUrl.search = new URLSearchParams({ view: "cm", fs: "1", to: contactForm.dataset.recipient, su: subject, body: body }).toString();
-      window.location.assign(gmailUrl.toString());
-    });
-  }
-
   document.querySelectorAll("[data-gallery-carousel]").forEach(function (gallery) {
     const track = gallery.querySelector(".gallery-track");
     const slides = Array.from(gallery.querySelectorAll(".gallery-slide"));
