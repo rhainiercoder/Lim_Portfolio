@@ -72,7 +72,7 @@ The portfolio itself is loaded from [`index.php`](index.php), [`portfolio.css`](
 
 ## Contact form
 
-The contact form sends messages through Gmail SMTP using PHPMailer. Configure these Render environment variables on the web service: `MAIL_USERNAME` (the sending Gmail address), `MAIL_PASSWORD` (a Google App Password), and optionally `MAIL_TO` (the inbox that receives messages; defaults to the portfolio email). Use a Google App Password with 2-Step Verification enabled; do not use the regular Gmail password. The sender's email is set as Reply-To. Credentials are kept in Render and must not be committed to the repository.
+The contact form sends submissions through the Web3Forms HTTPS API, which works with Render Free. Configure `WEB3FORMS_ACCESS_KEY` in Render using the access key from the Web3Forms form setup. Web3Forms sends submissions to the email address associated with that key. The visitor's email is included so you can reply. Keep service keys in Render and do not commit them to the repository.
 
 ## Project structure
 

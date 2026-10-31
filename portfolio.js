@@ -192,6 +192,17 @@
   setTheme(savedTheme === "dark");
   if (themeButton) themeButton.addEventListener("click", function () { setTheme(!root.classList.contains("dark")); });
 
+  const contactForm = document.querySelector(".contact-form-wrap form");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function () {
+      const submitButton = contactForm.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending…";
+      }
+    });
+  }
+
   document.querySelectorAll("[data-gallery-carousel]").forEach(function (gallery) {
     const track = gallery.querySelector(".gallery-track");
     const slides = Array.from(gallery.querySelectorAll(".gallery-slide"));

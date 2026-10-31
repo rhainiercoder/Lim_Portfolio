@@ -19,38 +19,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["contact_form"])) {
     } elseif ($senderName === "" || !filter_var($senderEmail, FILTER_VALIDATE_EMAIL) || strlen($message) < 10) {
         $contactStatus = "Please enter your name, a valid email, and a message of at least 10 characters.";
         $contactStatusType = "error";
-    } elseif (!is_file(__DIR__ . "/vendor/autoload.php")) {
-        $contactStatus = "The email service is not configured yet. Please email " . $email . " directly.";
-        $contactStatusType = "error";
     } else {
-        $smtpUser = getenv("MAIL_USERNAME") ?: "";
-        $smtpPassword = getenv("MAIL_PASSWORD") ?: "";
-        $recipient = getenv("MAIL_TO") ?: $email;
-        if ($smtpUser === "" || $smtpPassword === "") {
+        $accessKey = getenv("WEB3FORMS_ACCESS_KEY") ?: "";
+        if ($accessKey === "") {
             $contactStatus = "The email service is not configured yet. Please email " . $email . " directly.";
             $contactStatusType = "error";
         } else {
             try {
-                require_once __DIR__ . "/vendor/autoload.php";
-                $mailer = new PHPMailer\PHPMailer\PHPMailer(true);
-                $mailer->isSMTP();
-                $mailer->Host = "smtp.gmail.com";
-                $mailer->SMTPAuth = true;
-                $mailer->Username = $smtpUser;
-                $mailer->Password = $smtpPassword;
-                $mailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-                $mailer->Port = 587;
-                $mailer->CharSet = "UTF-8";
-                $mailer->setFrom($smtpUser, $name . " Portfolio");
-                $mailer->addAddress($recipient);
-                $mailer->addReplyTo($senderEmail, $senderName);
-                $mailer->Subject = "Portfolio inquiry from " . $senderName;
-                $mailer->Body = "Name: " . $senderName . "\nReply email: " . $senderEmail . "\n\n" . $message;
-                $mailer->send();
-                $contactStatus = "Thanks! Your message has been sent.";
-                $contactStatusType = "success";
+                $payload = json_encode([
+                    "access_key" => $accessKey,
+                    "name" => $senderName,
+                    "email" => $senderEmail,
+                    "subject" => "Portfolio inquiry from " . $senderName,
+                    "message" => $message,
+                    "botcheck" => $honeypot,
+                ], JSON_THROW_ON_ERROR);
+                $context = stream_context_create(["http" => [
+                    "method" => "POST",
+                    "header" => "Content-Type: application/json\r\n",
+                    "content" => $payload,
+                    "timeout" => 15,
+                    "ignore_errors" => true,
+                ]]);
+                $response = @file_get_contents("https://api.web3forms.com/submit", false, $context);
+                $statusLine = $http_response_header[0] ?? "";
+                $result = is_string($response) ? json_decode($response, true) : null;
+                if (preg_match('/\s2\d\d\s/', $statusLine) && is_array($result) && ($result["success"] ?? false)) {
+                    $contactStatus = "Thanks! Your message has been sent.";
+                    $contactStatusType = "success";
+                } else {
+                    error_log("Portfolio form API failed: " . $statusLine . " " . (string)$response);
+                    $contactStatus = "Sorry, your message could not be sent right now. Please email " . $email . " directly.";
+                    $contactStatusType = "error";
+                }
             } catch (Throwable $exception) {
-                error_log("Portfolio contact email failed: " . $exception->getMessage());
+                error_log("Portfolio form API failed: " . $exception->getMessage());
                 $contactStatus = "Sorry, your message could not be sent right now. Please email " . $email . " directly.";
                 $contactStatusType = "error";
             }
