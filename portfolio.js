@@ -194,11 +194,45 @@
 
   const contactForm = document.querySelector(".contact-form-wrap form");
   if (contactForm) {
-    contactForm.addEventListener("submit", function () {
+    contactForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
       const submitButton = contactForm.querySelector('button[type="submit"]');
+      const status = contactForm.querySelector("#contact-status");
+      const originalButtonText = "Send message ↗";
+      if (status) {
+        status.hidden = false;
+        status.dataset.status = "";
+        status.textContent = "Sending your message…";
+      }
       if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = "Sending…";
+      }
+      try {
+        const formData = new FormData(contactForm);
+        const payload = Object.fromEntries(formData.entries());
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || "The form service could not send your message.");
+        if (status) {
+          status.dataset.status = "success";
+          status.textContent = "Thanks! Your message has been sent.";
+        }
+        contactForm.reset();
+      } catch (error) {
+        if (status) {
+          status.dataset.status = "error";
+          status.textContent = (error && error.message) || "Sorry, your message could not be sent. Please email rhainierlim07@gmail.com directly.";
+        }
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
       }
     });
   }

@@ -72,7 +72,7 @@ The portfolio itself is loaded from [`index.php`](index.php), [`portfolio.css`](
 
 ## Contact form
 
-The contact form sends submissions through the Web3Forms HTTPS API, which works with Render Free. Configure `WEB3FORMS_ACCESS_KEY` in Render using the access key from the Web3Forms form setup. Web3Forms sends submissions to the email address associated with that key. The visitor's email is included so you can reply. Keep service keys in Render and do not commit them to the repository.
+The contact form submits directly from the browser to the Web3Forms HTTPS API, as required for its free plan. Configure `WEB3FORMS_ACCESS_KEY` in Render using the public access key from the Web3Forms form setup. PHP inserts the key into the rendered form, where visitors can see it; Web3Forms documents that this access key is public and safe to expose. Web3Forms sends submissions to the email address associated with that key. The visitor's email is included so you can reply.
 
 ## Project structure
 

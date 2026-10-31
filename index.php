@@ -4,62 +4,6 @@ $title = "BSIT Student";
 $tagline = "I build practical software and thoughtful digital experiences.";
 $about = "I'm Rhainier Lim, and my main focus is digital design and art. I’m self-taught in design and artistic practice, where I’ve developed my eye for composition, color, and visual storytelling. My programming knowledge comes from what I’ve learned in school, and I use that foundation to bring my design ideas to life.";
 $email = "rhainierlim07@gmail.com";
-$contactStatus = "";
-$contactStatusType = "";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["contact_form"])) {
-    $senderName = preg_replace('/[\r\n]+/', ' ', trim((string)($_POST["name"] ?? "")));
-    $senderEmail = trim((string)($_POST["email"] ?? ""));
-    $message = trim((string)($_POST["message"] ?? ""));
-    $honeypot = trim((string)($_POST["website"] ?? ""));
-
-    if ($honeypot !== "") {
-        $contactStatus = "Thanks! Your message has been sent.";
-        $contactStatusType = "success";
-    } elseif ($senderName === "" || !filter_var($senderEmail, FILTER_VALIDATE_EMAIL) || strlen($message) < 10) {
-        $contactStatus = "Please enter your name, a valid email, and a message of at least 10 characters.";
-        $contactStatusType = "error";
-    } else {
-        $accessKey = getenv("WEB3FORMS_ACCESS_KEY") ?: "";
-        if ($accessKey === "") {
-            $contactStatus = "The email service is not configured yet. Please email " . $email . " directly.";
-            $contactStatusType = "error";
-        } else {
-            try {
-                $payload = json_encode([
-                    "access_key" => $accessKey,
-                    "name" => $senderName,
-                    "email" => $senderEmail,
-                    "subject" => "Portfolio inquiry from " . $senderName,
-                    "message" => $message,
-                    "botcheck" => $honeypot,
-                ], JSON_THROW_ON_ERROR);
-                $context = stream_context_create(["http" => [
-                    "method" => "POST",
-                    "header" => "Content-Type: application/json\r\n",
-                    "content" => $payload,
-                    "timeout" => 15,
-                    "ignore_errors" => true,
-                ]]);
-                $response = @file_get_contents("https://api.web3forms.com/submit", false, $context);
-                $statusLine = $http_response_header[0] ?? "";
-                $result = is_string($response) ? json_decode($response, true) : null;
-                if (preg_match('/\s2\d\d\s/', $statusLine) && is_array($result) && ($result["success"] ?? false)) {
-                    $contactStatus = "Thanks! Your message has been sent.";
-                    $contactStatusType = "success";
-                } else {
-                    error_log("Portfolio form API failed: " . $statusLine . " " . (string)$response);
-                    $contactStatus = "Sorry, your message could not be sent right now. Please email " . $email . " directly.";
-                    $contactStatusType = "error";
-                }
-            } catch (Throwable $exception) {
-                error_log("Portfolio form API failed: " . $exception->getMessage());
-                $contactStatus = "Sorry, your message could not be sent right now. Please email " . $email . " directly.";
-                $contactStatusType = "error";
-            }
-        }
-    }
-}
 $skills = ["PHP", "HTML", "CSS", "JavaScript", "Java", "MySQL", "SQLite", "Git"];
 
 $systems = [
@@ -202,10 +146,11 @@ function e($value) { return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8"
       <a class="contact-link" href="https://www.instagram.com/ryuu_064/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="icon-fill" cx="17.5" cy="6.5" r="1"/></svg><span><strong>Instagram</strong><small>@ryuu_064</small></span><span class="contact-arrow" aria-hidden="true">↗</span></a>
       <a class="contact-link" href="https://www.facebook.com/rhainier.lim" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="icon-fill" d="M13.4 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.4v2H7.2V13H10v8z"/></svg><span><strong>Facebook</strong><small>Rhainier Lim</small></span><span class="contact-arrow" aria-hidden="true">↗</span></a>
     </div></div><div class="contact-form-wrap">
-      <form method="post" action="#contact">
-        <input type="hidden" name="contact_form" value="1">
-        <div class="contact-honeypot" aria-hidden="true"><label for="contact-website">Leave this field empty</label><input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-        <?php if ($contactStatus !== ""): ?><p class="form-status" role="status" data-status="<?= e($contactStatusType) ?>"><?= e($contactStatus) ?></p><?php endif; ?>
+      <form method="post" action="https://api.web3forms.com/submit">
+        <input type="hidden" name="access_key" value="<?= e(getenv("WEB3FORMS_ACCESS_KEY") ?: "") ?>">
+        <input type="hidden" name="subject" value="New portfolio inquiry">
+        <input type="checkbox" name="botcheck" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="form-status" role="status" id="contact-status" hidden></p>
         <label for="contact-name">Name</label><input id="contact-name" name="name" type="text" autocomplete="name" required>
         <label for="contact-email">Email</label><input id="contact-email" name="email" type="email" autocomplete="email" required>
         <label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="4" minlength="10" required></textarea>
